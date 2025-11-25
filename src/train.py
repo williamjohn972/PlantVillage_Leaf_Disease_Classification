@@ -142,7 +142,7 @@ class Trainer():
             self._calc_and_store_metrics(val_epoch_data, "val")
 
             cur_lr = self.optim.param_groups[0]['lr']
-            self.history["lrs"].append(cur_lr)
+            self.history["train_lrs"].append(cur_lr)
 
             # Print Metrics 
             # Last Element of History corresponds to Current Epochs Metrics 
