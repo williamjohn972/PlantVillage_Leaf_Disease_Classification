@@ -4,13 +4,16 @@ from tqdm.auto import tqdm
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, classification_report
 
+import optuna
+
 class Trainer():
 
     def __init__(self,
                  model, 
                  loss_fn, optim,
                  device,
-                 early_stopper=None, lr_scheduler=None,):
+                 early_stopper=None, lr_scheduler=None,
+                 ):
         
         self.model = model
         self.loss_fn = loss_fn
@@ -121,12 +124,13 @@ class Trainer():
         self.history[f"{mode}_f1s"].append(f1)
 
     def train_val_model(self,epochs,
-                        train_loader, val_loader):  
+                        train_loader, val_loader,
+                        callback):      
     
         for epoch in range(epochs):
 
-            cur_epoch = epoch + 1
-            print(f"Epoch {cur_epoch} of {epochs}")
+            self.cur_epoch = epoch + 1
+            print(f"Epoch {self.cur_epoch} of {epochs}")
 
             # Train the Model
             self.model.train() 
@@ -153,6 +157,10 @@ class Trainer():
             
 
             val_metric_to_monitor = self.history['val_losses'][-1]
+            
+            # This is where we callback
+            if callback:
+                callback(self)
 
             # Call Learning Rate Scheduler if it has been implemented 
             if self.lr_scheduler:
