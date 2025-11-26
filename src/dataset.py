@@ -143,7 +143,7 @@ def create_subsets(full_dataset,
     return train_set, val_set, test_set
 
 def create_data_loaders(train_dataset,val_dataset,test_dataset, 
-                        batch_size:int = 32, random_state=SEED):
+                        batch_size:int = 32, num_workers = 0, random_state=SEED):
     
     generator = torch.Generator()
     generator.manual_seed(random_state)
@@ -151,16 +151,19 @@ def create_data_loaders(train_dataset,val_dataset,test_dataset,
     train_loader = None if not train_dataset else DataLoader(train_dataset, 
                                                              batch_size=batch_size,
                                                              shuffle=True,
+                                                             num_workers = num_workers,
                                                              worker_init_fn=_seed_worker,
                                                              generator=generator)
     
     val_loader = None if not val_dataset else DataLoader(val_dataset,
                                                          batch_size=batch_size,
+                                                         num_workers = num_workers,
                                                          worker_init_fn=_seed_worker,
                                                          shuffle=False)
     
     test_loader = None if not test_dataset else DataLoader(test_dataset,
                                                            batch_size=batch_size,
+                                                           num_workers = num_workers,
                                                            worker_init_fn=_seed_worker,
                                                            shuffle=False)
     
