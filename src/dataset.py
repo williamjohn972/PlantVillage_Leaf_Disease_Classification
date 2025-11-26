@@ -151,19 +151,16 @@ def create_data_loaders(train_dataset,val_dataset,test_dataset,
     train_loader = None if not train_dataset else DataLoader(train_dataset, 
                                                              batch_size=batch_size,
                                                              shuffle=True,
-                                                             num_workers=2,
                                                              worker_init_fn=_seed_worker,
                                                              generator=generator)
     
     val_loader = None if not val_dataset else DataLoader(val_dataset,
                                                          batch_size=batch_size,
-                                                         num_workers=2,
                                                          worker_init_fn=_seed_worker,
                                                          shuffle=False)
     
     test_loader = None if not test_dataset else DataLoader(test_dataset,
                                                            batch_size=batch_size,
-                                                           num_workers=2,
                                                            worker_init_fn=_seed_worker,
                                                            shuffle=False)
     

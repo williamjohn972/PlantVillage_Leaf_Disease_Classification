@@ -150,7 +150,7 @@ class Trainer():
             print(f"Current LR: {cur_lr: .5f}")
             print(f"Train Loss: {self.history['train_losses'][-1]:.3f} | Acc: {self.history['train_accs'][-1]*100:.2f}% | F1-Macro: {self.history['train_f1s'][-1]*100:.2f}%")
             print(f"Val Loss:   {self.history['val_losses'][-1]:.3f}   | Acc:  {self.history['val_accs'][-1]*100:.2f}%  | F1-Macro: {self.history['val_f1s'][-1]*100:.2f}%")
-            print(f"{'-'*15}\n")
+            
 
             val_metric_to_monitor = self.history['val_losses'][-1]
 
@@ -169,11 +169,13 @@ class Trainer():
                                                 metric=val_metric_to_monitor,
                                                 optimizer_state_dict=self.optim.state_dict(),
                                                 lr_scheduler_state_dict=self.lr_scheduler.state_dict() if self.lr_scheduler else None)
-
+                
                 if early_stop: 
                     print("Early stop signal received. Exiting training loop...")
+                    print(f"{'-'*15}\n")
                     break
 
+            print(f"{'-'*15}\n")
             
 
     def test_model(self, loader):
@@ -235,7 +237,8 @@ class EarlyStopper():
             else:
                 self._print_message(f"Metric improved ({self.best_score:.4f} -> {metric:.4f})")
 
-            self._print_message(f"Patience counter reset. Saving best model...")
+            if self.save_checkpoints:
+                self._print_message(f"Saving best model...")
 
             self.counter = 0                        # Reset the counter to 0 
             self.best_score = metric                # Set the metric as the new best_score
