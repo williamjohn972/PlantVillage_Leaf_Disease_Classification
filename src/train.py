@@ -178,14 +178,24 @@ class Trainer():
             print(f"{'-'*15}\n")
             
 
-    def test_model(self, loader):
+    def test_model(self, loader, class_names=None):
 
         # Validate the Model
         self.model.eval()
         with torch.inference_mode():
             data = self._run_epoch(loader, mode="test")
         
-        # Calculate and Print Metrics 
+        # Calculate and Print Metrics
+        pred_logits = data['pred_logits']
+        targets = data['targets']
+
+        predictions = torch.argmax(pred_logits, dim=1).numpy()
+        targets = targets.numpy()
+
+        print("\n--- Test Set Classification Report ---")
+        report = classification_report(targets, predictions, target_names=class_names)
+        print(report)
+        print("--------------------------------------\n")
 
         return data
         
