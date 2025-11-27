@@ -3,6 +3,8 @@ from tqdm.auto import tqdm
 
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, classification_report
+import pickle
+import os 
 
 class Trainer():
 
@@ -10,8 +12,7 @@ class Trainer():
                  model, 
                  loss_fn, optim,
                  device,
-                 early_stopper=None, lr_scheduler=None,
-                 ):
+                 early_stopper=None, lr_scheduler=None):
         
         self.model = model
         self.loss_fn = loss_fn
@@ -33,6 +34,17 @@ class Trainer():
 
             "train_lrs": []
         }
+
+    def save(self,filepath):
+        """
+        Saves Trainer History into a .pkl file
+        """
+
+        os.mkdirs(filepath, exist_ok=True)
+
+        with open(filepath, 'wb') as f:
+            pickle.dump(self.history, f)
+
 
     def _batch_to_device(self, batch):
         
@@ -123,7 +135,7 @@ class Trainer():
 
     def train_val_model(self,epochs,
                         train_loader, val_loader,
-                        callback):      
+                        callback = None):      
     
         for epoch in range(epochs):
 
@@ -173,9 +185,13 @@ class Trainer():
             if self.early_stopper:
                 early_stop = self.early_stopper(model=self.model,
                                                 metric=val_metric_to_monitor,
+                                                epoch=self.cur_epoch,
                                                 optimizer_state_dict=self.optim.state_dict(),
                                                 lr_scheduler_state_dict=self.lr_scheduler.state_dict() if self.lr_scheduler else None)
                 
+                if self.early_stopper.counter == 0 and not early_stop:
+                    self.history["best_epoch"] = self.cur_epoch
+
                 if early_stop: 
                     print("Early stop signal received. Exiting training loop...")
                     print(f"{'-'*15}\n")
@@ -273,6 +289,9 @@ class EarlyStopper():
             
 
     def save_checkpoint(self, model, **others):    # **others is for optimizer_state, etc 
+        
+        os.mkdirs(self.checkpoint_path, exist_ok=True)
+
         torch.save({
             "model_state_dict": model.state_dict(),
             **others                                
