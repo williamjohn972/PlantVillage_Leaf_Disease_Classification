@@ -275,7 +275,7 @@ class EarlyStopper():
             self.counter = 0                        # Reset the counter to 0 
             self.best_score = metric                # Set the metric as the new best_score
             if self.save_checkpoints:
-                self.save_checkpoint(model, others) # save the current state of the model 
+                self.save_checkpoint(model, **others) # save the current state of the model 
 
 
         else:
