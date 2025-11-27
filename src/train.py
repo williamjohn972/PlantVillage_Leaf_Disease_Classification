@@ -4,8 +4,6 @@ from tqdm.auto import tqdm
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, classification_report
 
-import optuna
-
 class Trainer():
 
     def __init__(self,

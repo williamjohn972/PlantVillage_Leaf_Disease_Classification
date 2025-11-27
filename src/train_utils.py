@@ -1,8 +1,8 @@
 import torch
 import numpy as np
 
-from train import Trainer, EarlyStopper
-from model import get_resnet18
+from .train import Trainer, EarlyStopper
+from .model import get_resnet18
 
 def build_model(num_classes, dropout, device, freeze_base=True):
     
