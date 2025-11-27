@@ -40,7 +40,7 @@ class Trainer():
         Saves Trainer History into a .pkl file
         """
 
-        os.mkdirs(os.path.dirname(filepath), exist_ok=True)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
         with open(filepath, 'wb') as f:
             pickle.dump(self.history, f)
@@ -290,7 +290,7 @@ class EarlyStopper():
 
     def save_checkpoint(self, model, **others):    # **others is for optimizer_state, etc 
         
-        os.mkdirs(os.path.dirname(self.checkpoint_path), exist_ok=True)
+        os.makedirs(os.path.dirname(self.checkpoint_path), exist_ok=True)
 
         torch.save({
             "model_state_dict": model.state_dict(),
