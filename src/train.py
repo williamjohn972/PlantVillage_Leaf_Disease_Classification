@@ -10,8 +10,8 @@ class Trainer():
 
     def __init__(self,
                  model, 
-                 loss_fn, optim,
                  device,
+                 loss_fn, optim=None,
                  early_stopper=None, lr_scheduler=None):
         
         self.model = model
@@ -199,8 +199,7 @@ class Trainer():
 
             print(f"{'-'*15}\n")
             
-
-    def test_model(self, loader, class_names=None):
+    def test_model(self,loader, class_names=None):
 
         # Validate the Model
         self.model.eval()
