@@ -15,4 +15,14 @@ def get_resnet18(num_classes, dropout=0.0):
     
     return model
 
+def get_prediction(model, input_tensor):   # Input tensor must be of shape [Batch, C, H, W]
+
+    model.eval()
+    with torch.inference_mode():
+
+        pred_logits = model(input_tensor)
+        prediction = torch.argmax(pred_logits, dim=1)
+
+    return prediction
+
 
